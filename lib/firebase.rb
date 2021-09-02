@@ -9,7 +9,7 @@ module Firebase
   class Client
     attr_reader :auth, :request
 
-    def initialize(base_uri, auth=nil, scope=%w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email ))
+    def initialize(base_uri, auth=nil, env_vars=false, scope=%w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email ))
       if base_uri !~ URI::regexp(%w(https))
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
@@ -26,8 +26,13 @@ module Firebase
           json_key_io: StringIO.new(auth),
           scope: scope
         )
-        @credentials.apply!(@request.default_header)
-        @expires_at = @credentials.issued_at + 0.95 * @credentials.expires_in
+        apply_credentials
+      elsif env_vars
+        # Using Env Vars https://github.com/googleapis/google-auth-library-ruby#example-environment-variables
+        @credentials = ::Google::Auth::ServiceAccountCredentials.make_creds(
+          scope: scope
+        )
+        apply_credentials
       else
         # Using deprecated Database Secret
         @secret = auth
@@ -89,6 +94,11 @@ module Firebase
       rescue JSON::ParserError
         return false
       end
+    end
+
+    def apply_credentials
+      @credentials.apply!(@request.default_header)
+      @expires_at = @credentials.issued_at + 0.95 * @credentials.expires_in
     end
   end
 end
