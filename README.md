@@ -1,4 +1,4 @@
-# firebase [![Build Status](https://travis-ci.org/oscardelben/firebase-ruby.svg?branch=master)](https://travis-ci.org/oscardelben/firebase-ruby) [![Gem Version](https://badge.fury.io/rb/firebase.svg)](https://rubygems.org/gems/firebase)
+# firebase [![Build Status](https://app.travis-ci.com/jaime-canales/firebase-ruby.svg?branch=master)](https://app.travis-ci.com/jaime-canales/firebase-ruby) [![Gem Version](https://badge.fury.io/rb/firebase.svg)](https://rubygems.org/gems/firebase)
 
 
 Ruby wrapper for the [Firebase REST API](https://firebase.google.com/docs/reference/rest/database/).
