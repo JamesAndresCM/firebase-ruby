@@ -9,7 +9,11 @@ module Firebase
   class Client
     attr_reader :auth, :request
 
-    def initialize(base_uri, auth=nil, env_vars=false, scope=%w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email ))
+    def initialize(params)
+      base_uri = params[:base_uri]
+      auth = params[:auth] || nil
+      env_vars = params[:env_vars] || false
+      scope = params[:scope]|| %w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email)
       if base_uri !~ URI::regexp(%w(https))
         raise ArgumentError.new('base_uri must be a valid https uri')
       end

@@ -7,21 +7,21 @@ describe "Firebase" do
 
   describe "invalid uri" do
     it "should raise on http" do
-      expect{ Firebase::Client.new('http://test.firebaseio.com') }.to raise_error(ArgumentError)
+      expect{ Firebase::Client.new(base_uri: 'http://test.firebaseio.com') }.to raise_error(ArgumentError)
     end
 
     it 'should raise on empty' do
-      expect{ Firebase::Client.new('') }.to raise_error(ArgumentError)
+      expect{ Firebase::Client.new() }.to raise_error(ArgumentError)
     end
 
     it "should raise when a nonrelative path is used" do
-      firebase = Firebase::Client.new('https://test.firebaseio.com')
+      firebase = Firebase::Client.new(base_uri: 'https://test.firebaseio.com')
       expect { firebase.get('/path', {}) }.to raise_error(ArgumentError)
     end
   end
 
   before do
-    @firebase = Firebase::Client.new('https://test.firebaseio.com')
+    @firebase = Firebase::Client.new(base_uri: 'https://test.firebaseio.com')
   end
 
   describe "set" do
@@ -94,7 +94,7 @@ describe "Firebase" do
 
   describe "http processing" do
     it "sends custom auth query" do
-      firebase = Firebase::Client.new('https://test.firebaseio.com', 'secret')
+      firebase = Firebase::Client.new(base_uri: 'https://test.firebaseio.com', auth: 'secret')
       expect(firebase.request).to receive(:request).with(:get, "todos.json", {
         :body => "null",
         :query => {:auth => "secret", :foo => 'bar'},
@@ -122,7 +122,7 @@ describe "Firebase" do
     end
 
     it "sets custom auth header" do
-      client = Firebase::Client.new('https://test.firebaseio.com/', '{ "private_key": true }')
+      client = Firebase::Client.new(base_uri: 'https://test.firebaseio.com/', auth: '{ "private_key": true }')
       expect(client.request.default_header).to eql({
         'Content-Type' => 'application/json',
         :authorization => 'Bearer 1'
@@ -131,7 +131,7 @@ describe "Firebase" do
 
     it "handles token expiry" do
       current_time = Time.now
-      client = Firebase::Client.new('https://test.firebaseio.com/', '{ "private_key": true }')
+      client = Firebase::Client.new(base_uri: 'https://test.firebaseio.com/', auth: '{ "private_key": true }')
       allow(Time).to receive(:now) { current_time + 3600 }
       expect(@credentials).to receive(:refresh!)
       client.get 'dummy'
