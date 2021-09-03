@@ -31,7 +31,7 @@ module Firebase
           scope: scope
         )
         apply_credentials
-      elsif env_vars
+      elsif env_vars == true
         # Using Env Vars https://github.com/googleapis/google-auth-library-ruby#example-environment-variables
         @credentials = ::Google::Auth::ServiceAccountCredentials.make_creds(
           scope: scope
