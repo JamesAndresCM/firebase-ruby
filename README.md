@@ -18,7 +18,7 @@ gem install firebase
 ```ruby
 base_uri = 'https://<your-firebase>.firebaseio.com/'
 
-firebase = Firebase::Client.new(base_uri)
+firebase = Firebase::Client.new(base_uri: base_uri)
 
 response = firebase.push("todos", { :name => 'Pick the milk', :'.priority' => 1 })
 response.success? # => true
@@ -33,7 +33,7 @@ If you have a read-only namespace, you need to authenticate your Firebase client
 #### Using Firebase Database Secret (deprecated)
 ```
 # Using Firebase Database Secret (deprecated)
-firebase = Firebase::Client.new(base_uri, db_secret)
+firebase = Firebase::Client.new(base_uri: base_uri, auth: db_secret)
 ```
 
 #### Using Firebase Admin SDK private key
@@ -42,9 +42,19 @@ Go to the Firebase console and under `Project Settings` -> `Service Accounts` ->
 ```ruby
 # Using Firebase Admin SDK private key
 private_key_json_string = File.open('/path/to/your/generated/json').read
-firebase = Firebase::Client.new(base_uri, private_key_json_string)
+firebase = Firebase::Client.new(base_uri: base_uri, auth: private_key_json_string)
 ```
 
+### Using Firebase Env Vars
+Set environment variables
+```
+export GOOGLE_ACCOUNT_TYPE=service_account
+export GOOGLE_CLIENT_ID=000000000000000000000
+export GOOGLE_CLIENT_EMAIL=xxxx@xxxx.iam.gserviceaccount.com
+export GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+
+firebase = Firebase::Client.new(base_uri: base_uri, env_vars: true)
+```
 
 You can now pass custom query options to firebase:
 
@@ -89,7 +99,7 @@ some [sane defaults](https://github.com/nahi/httpclient/blob/dd322d39d4d11c48f7b
 but it is quite easy to change them by modifying the `request` object directly:
 
 ```ruby
-firebase = Firebase::Client.new(base_uri)
+firebase = Firebase::Client.new(base_uri: base_uri)
 # firebase.request is a regular httpclient object
 firebase.request.connect_timeout = 30
 ```
