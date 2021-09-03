@@ -45,9 +45,9 @@ private_key_json_string = File.open('/path/to/your/generated/json').read
 firebase = Firebase::Client.new(base_uri: base_uri, auth: private_key_json_string)
 ```
 
-### Using Firebase Env Vars
+#### Using Firebase Env Vars
 Set environment variables
-```
+```ruby
 export GOOGLE_ACCOUNT_TYPE=service_account
 export GOOGLE_CLIENT_ID=000000000000000000000
 export GOOGLE_CLIENT_EMAIL=xxxx@xxxx.iam.gserviceaccount.com
