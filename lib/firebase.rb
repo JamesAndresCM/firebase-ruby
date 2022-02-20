@@ -7,9 +7,21 @@ require 'uri'
 
 module Firebase
   class Client
+    SCOPE = %w[
+      https://www.googleapis.com/auth/cloud-platform
+      https://www.googleapis.com/auth/datastore
+      https://www.googleapis.com/auth/devstorage.read_write
+      https://www.googleapis.com/auth/firebase
+      https://www.googleapis.com/auth/identitytoolkit
+      https://www.googleapis.com/auth/userinfo.email
+    ]
     attr_reader :auth, :request
 
-    def initialize(base_uri, auth=nil, env_vars=false, scope=%w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email ))
+    def initialize(params)
+      base_uri = params[:base_uri]
+      auth = params[:auth] || nil
+      env_vars = params[:env_vars] || false
+      scope = params[:scope]|| SCOPE
       if base_uri !~ URI::regexp(%w(https))
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
@@ -27,7 +39,7 @@ module Firebase
           scope: scope
         )
         apply_credentials
-      elsif env_vars
+      elsif env_vars == true
         # Using Env Vars https://github.com/googleapis/google-auth-library-ruby#example-environment-variables
         @credentials = ::Google::Auth::ServiceAccountCredentials.make_creds(
           scope: scope
