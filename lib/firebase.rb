@@ -7,13 +7,21 @@ require 'uri'
 
 module Firebase
   class Client
+    SCOPE = %w[
+      https://www.googleapis.com/auth/cloud-platform
+      https://www.googleapis.com/auth/datastore
+      https://www.googleapis.com/auth/devstorage.read_write
+      https://www.googleapis.com/auth/firebase
+      https://www.googleapis.com/auth/identitytoolkit
+      https://www.googleapis.com/auth/userinfo.email
+    ]
     attr_reader :auth, :request
 
     def initialize(params)
       base_uri = params[:base_uri]
       auth = params[:auth] || nil
       env_vars = params[:env_vars] || false
-      scope = params[:scope]|| %w(https://www.googleapis.com/auth/firebase.database https://www.googleapis.com/auth/userinfo.email)
+      scope = params[:scope] || SCOPE
       if base_uri !~ URI::regexp(%w(https))
         raise ArgumentError.new('base_uri must be a valid https uri')
       end
